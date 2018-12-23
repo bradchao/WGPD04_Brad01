@@ -4,6 +4,7 @@ var Brad01Layer = cc.Layer.extend({
     enter: null,
     input:null,
     mesg: null,
+    answer : null,
     ctor:function () {
         this._super();
         var w = cc.winSize.width;
@@ -18,8 +19,34 @@ var Brad01Layer = cc.Layer.extend({
 
         this.initSprite();
 
+        this.answer = createAnswer();
+
+        this.myMouseListener();
+
         return true;
     },
+
+    myMouseListener:function(){
+        if ('mouse' in cc.sys.capabilities){
+            var mouseListener = {
+                event: cc.EventListener.MOUSE,
+                onMouseDown: function (e) {
+                    var ex = e.getLocationX();
+                    var ey = e.getLocationY();
+
+                    var point = new cc.Point(ex,ey);
+                    var rect = new cc.Rect(2,3,4,5);
+                    if (cc.rectContainsPoint(rect,point)){
+                        cc.log("hit");
+                    }
+
+                },
+
+            };
+            cc.eventManager.addListener(mouseListener,this);
+        }
+    },
+
 
     initSprite: function () {
         cc.spriteFrameCache.addSpriteFrames(res.number_plist, res.number_png);
@@ -79,3 +106,19 @@ var Brad01Scene = cc.Scene.extend({
     }
 });
 
+function createAnswer() {
+    var poker = [0,1,2,3,4,5,6,7,8,9];
+    poker = shuffle(poker);
+    return '' + poker[0]+poker[1]+poker[2];
+}
+
+function shuffle(a) {
+    var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+    return a;
+}
