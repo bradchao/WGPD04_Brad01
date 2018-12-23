@@ -1,7 +1,9 @@
 var Brad01Layer = cc.Layer.extend({
-    sprite1:null,
-    sprite2:null,
-    sprite4:null,
+    nums: new Array(10),
+    back: null,
+    enter: null,
+    input:null,
+    mesg: null,
     ctor:function () {
         this._super();
         var w = cc.winSize.width;
@@ -10,7 +12,7 @@ var Brad01Layer = cc.Layer.extend({
 
         var title = new cc.LabelTTF("GuessNumber Game", "Arial", 38);
         title.x = cc.winSize.width / 2;
-        title.y = cc.winSize.height * 6 / 7;
+        title.y = cc.winSize.height * 7 / 8;
         title.setColor(cc.color(255,255,0));
         this.addChild(title, 5);
 
@@ -22,20 +24,47 @@ var Brad01Layer = cc.Layer.extend({
     initSprite: function () {
         cc.spriteFrameCache.addSpriteFrames(res.number_plist, res.number_png);
 
-        this.sprite1 = new cc.Sprite("#number1.png");
-        this.sprite1.x = cc.winSize.width *2 /6;
-        this.sprite1.y = cc.winSize.height *2 /7;
-        this.addChild(this.sprite1, 0);
+        for ( i = 0; i< this.nums.length; i++){
+            this.nums[i] = new cc.Sprite("#number"+ i + ".png");
 
-        this.sprite2 = new cc.Sprite("#number2.png");
-        this.sprite2.x = cc.winSize.width *3 /6;
-        this.sprite2.y = cc.winSize.height *2 /7;
-        this.addChild(this.sprite2, 0);
+            var px, py;
 
-        this.sprite4 = new cc.Sprite("#number4.png");
-        this.sprite4.x = cc.winSize.width *2 /6;
-        this.sprite4.y = cc.winSize.height *3 /7;
-        this.addChild(this.sprite4, 0);
+            if (i == 0){
+                px = 2;
+                py = 1;
+            }else{
+                px = (i - 1) % 3 + 2;
+                py = parseInt((i - 1) / 3) + 2
+            }
+
+            this.nums[i].x = cc.winSize.width * px /6;
+            this.nums[i].y = cc.winSize.height * py /8;
+
+            this.addChild(this.nums[i], 0);
+        }
+
+        this.back = new cc.Sprite(res.back_png);
+        this.back.x = cc.winSize.width *3 /6;
+        this.back.y = cc.winSize.height *1 /7;
+        this.addChild(this.back, 0);
+
+        this.enter = new cc.Sprite(res.enter_png);
+        this.enter.x = cc.winSize.width *4 /6;
+        this.enter.y = cc.winSize.height *1 /8;
+        this.addChild(this.enter, 0);
+
+
+        this.input = new cc.LabelTTF("", "Arial", 30);
+        this.input.x = cc.winSize.width / 2;
+        this.input.y = cc.winSize.height * 6 / 8;
+        this.input.setColor(cc.color(255,255,255));
+        this.addChild(this.input, 5);
+
+        this.mesg = new cc.LabelTTF("", "Arial", 24);
+        this.mesg.x = cc.winSize.width / 2;
+        this.mesg.y = cc.winSize.height * 5 / 8;
+        this.mesg.setColor(cc.color(0,255,0));
+        this.addChild(this.mesg, 5);
 
 
     },
