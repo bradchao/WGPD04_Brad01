@@ -51,7 +51,8 @@ var Brad01Layer = cc.Layer.extend({
 
                     if (layer.inputString.length == 3){
                         if (cc.rectContainsPoint(layer.enterRect, point)){
-                            cc.log('check AB');
+                            var result = checkAB(layer.answer, layer.inputString);
+                            layer.mesg.setString(result);
                             return;
                         }
                     }else{
@@ -170,4 +171,16 @@ function shuffle(a) {
         a[j] = x;
     }
     return a;
+}
+
+function checkAB(ans, guess) {
+    var a = 0, b = 0;
+    for (i=0; i<ans.length; i++){
+        if (guess.charAt(i) == ans.charAt(i)){
+            a++;
+        }else if (ans.indexOf(guess.charAt(i)) != -1){
+            b++;
+        }
+    }
+    return a + "A" + b + "B";
 }
