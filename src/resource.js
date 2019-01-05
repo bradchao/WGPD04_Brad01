@@ -28,6 +28,8 @@ var res = {
     number_plist : "res/number.plist",
     back_png : "res/back.png",
     enter_png : "res/enter.png",
+    winner_png : "res/winner.png",
+    loser_png : "res/loser.png",
 };
 
 var g_resources = [];

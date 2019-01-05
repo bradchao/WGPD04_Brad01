@@ -9,6 +9,9 @@ var Brad01Layer = cc.Layer.extend({
     inputString: '',
     mesg: null,
     answer : null,
+    winner: null,
+    loser: null,
+    counter:0,
     ctor:function () {
         this._super();
         var w = cc.winSize.width;
@@ -41,6 +44,7 @@ var Brad01Layer = cc.Layer.extend({
                     var point = new cc.Point(ex,ey);
 
                     if (layer.inputString.length>0){
+                        // back
                         if (cc.rectContainsPoint(layer.backRect, point)){
                             layer.inputString =
                                 layer.inputString.substr(0, layer.inputString.length-1);
@@ -50,12 +54,27 @@ var Brad01Layer = cc.Layer.extend({
                     }
 
                     if (layer.inputString.length == 3){
+                        // enter
                         if (cc.rectContainsPoint(layer.enterRect, point)){
                             var result = checkAB(layer.answer, layer.inputString);
                             layer.mesg.setString(result);
+                            layer.counter++;
+
+                            if (result == '3A0B'){
+                                // winner
+                                layer.winner.setVisible(true);
+                            }else if (layer.counter == 10){
+                                // loser
+                                layer.loser.setVisible(true);
+                            }
+
+                            layer.inputString = '';
+
+
                             return;
                         }
                     }else{
+                        // Number
                         for (i=0; i<layer.rects.length; i++){
                             if (cc.rectContainsPoint(layer.rects[i], point) &&
                                 layer.inputString.indexOf(''+i) == -1){
@@ -142,6 +161,22 @@ var Brad01Layer = cc.Layer.extend({
         this.mesg.y = cc.winSize.height * 5 / 8;
         this.mesg.setColor(cc.color(0,255,0));
         this.addChild(this.mesg, 5);
+
+        this.winner = new cc.Sprite(res.winner_png);
+        this.winner.attr({
+            x : cc.winSize.width /2,
+            y : cc.winSize.height /2
+        });
+        this.addChild(this.winner);
+        this.winner.setVisible(false);
+
+        this.loser = new cc.Sprite(res.loser_png);
+        this.loser.attr({
+            x : cc.winSize.width /2,
+            y : cc.winSize.height /2
+        });
+        this.addChild(this.loser);
+        this.loser.setVisible(false);
 
 
     },
