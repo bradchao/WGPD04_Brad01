@@ -1,9 +1,12 @@
 var Brad01Layer = cc.Layer.extend({
     nums: new Array(10),
     rects: new Array(10),
+    backRect: null,
+    enterRect: null,
     back: null,
     enter: null,
     input:null,
+    inputString: '',
     mesg: null,
     answer : null,
     ctor:function () {
@@ -37,13 +40,34 @@ var Brad01Layer = cc.Layer.extend({
 
                     var point = new cc.Point(ex,ey);
 
-                    for (i=0; i<layer.rects.length; i++){
-                        if (cc.rectContainsPoint(layer.rects[i], point)){
-                            cc.log(i);
-                            break;
+                    if (layer.inputString.length>0){
+                        if (cc.rectContainsPoint(layer.backRect, point)){
+                            layer.inputString =
+                                layer.inputString.substr(0, layer.inputString.length-1);
+                            layer.input.setString(layer.inputString);
+                            return;
                         }
-
                     }
+
+                    if (layer.inputString.length == 3){
+                        if (cc.rectContainsPoint(layer.enterRect, point)){
+                            cc.log('check AB');
+                            return;
+                        }
+                    }else{
+                        for (i=0; i<layer.rects.length; i++){
+                            if (cc.rectContainsPoint(layer.rects[i], point) &&
+                                layer.inputString.indexOf(''+i) == -1){
+                                cc.log(i);
+                                layer.inputString += i;
+                                layer.input.setString(layer.inputString);
+                                break;
+                            }
+
+                        }
+                    }
+
+
                 },
 
             };
@@ -86,15 +110,27 @@ var Brad01Layer = cc.Layer.extend({
         this.back = new cc.Sprite(res.back_png);
         this.back.x = cc.winSize.width *3 /6;
         this.back.y = cc.winSize.height *1 /7;
+        this.backRect = new cc.Rect(
+            this.back.x - this.back.width/2,
+            this.back.y - this.back.height/2,
+            this.back.width,
+            this.back.height
+        );
         this.addChild(this.back, 0);
 
         this.enter = new cc.Sprite(res.enter_png);
         this.enter.x = cc.winSize.width *4 /6;
         this.enter.y = cc.winSize.height *1 /8;
+        this.enterRect = new cc.Rect(
+            this.enter.x - this.enter.width/2,
+            this.enter.y - this.enter.height/2,
+            this.enter.width,
+            this.enter.height
+        );
         this.addChild(this.enter, 0);
 
 
-        this.input = new cc.LabelTTF("", "Arial", 30);
+        this.input = new cc.LabelTTF(this.inputString, "Arial", 30);
         this.input.x = cc.winSize.width / 2;
         this.input.y = cc.winSize.height * 6 / 8;
         this.input.setColor(cc.color(255,255,255));
