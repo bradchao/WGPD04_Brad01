@@ -1,5 +1,6 @@
 var Brad01Layer = cc.Layer.extend({
     nums: new Array(10),
+    rects: new Array(10),
     back: null,
     enter: null,
     input:null,
@@ -21,12 +22,12 @@ var Brad01Layer = cc.Layer.extend({
 
         this.answer = createAnswer();
 
-        this.myMouseListener();
+        this.myMouseListener(this);
 
         return true;
     },
 
-    myMouseListener:function(){
+    myMouseListener:function(layer){
         if ('mouse' in cc.sys.capabilities){
             var mouseListener = {
                 event: cc.EventListener.MOUSE,
@@ -35,11 +36,14 @@ var Brad01Layer = cc.Layer.extend({
                     var ey = e.getLocationY();
 
                     var point = new cc.Point(ex,ey);
-                    var rect = new cc.Rect(2,3,4,5);
-                    if (cc.rectContainsPoint(rect,point)){
-                        cc.log("hit");
-                    }
 
+                    for (i=0; i<layer.rects.length; i++){
+                        if (cc.rectContainsPoint(layer.rects[i], point)){
+                            cc.log(i);
+                            break;
+                        }
+
+                    }
                 },
 
             };
@@ -66,6 +70,15 @@ var Brad01Layer = cc.Layer.extend({
 
             this.nums[i].x = cc.winSize.width * px /6;
             this.nums[i].y = cc.winSize.height * py /8;
+
+            this.rects[i] = new cc.Rect(
+                this.nums[i].x - this.nums[i].width/2,
+                this.nums[i].y - this.nums[i].height/2,
+                this.nums[i].width,
+                this.nums[i].height
+            );
+
+
 
             this.addChild(this.nums[i], 0);
         }
