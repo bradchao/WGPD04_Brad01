@@ -12,6 +12,7 @@ var Brad01Layer = cc.Layer.extend({
     winner: null,
     loser: null,
     counter:0,
+    dx: 4,
     ctor:function () {
         this._super();
         var w = cc.winSize.width;
@@ -22,7 +23,7 @@ var Brad01Layer = cc.Layer.extend({
         title.x = cc.winSize.width / 2;
         title.y = cc.winSize.height * 7 / 8;
         title.setColor(cc.color(255,255,0));
-        this.addChild(title, 5);
+        this.addChild(title, 5, "mytitle");
 
         this.initSprite();
 
@@ -30,7 +31,22 @@ var Brad01Layer = cc.Layer.extend({
 
         this.myMouseListener(this);
 
+        this.scheduleUpdate();
+
         return true;
+    },
+
+
+    update: function() {
+        //cc.log(this.temp++);
+        var mytitle = this.getChildByName("mytitle");
+        if (mytitle.x + mytitle.width/2 >= cc.winSize.width ||
+            mytitle.x - mytitle.width/2 <= 0){
+            this.dx *= -1;
+        }
+        mytitle.x += this.dx;
+
+
     },
 
     myMouseListener:function(layer){
@@ -49,6 +65,7 @@ var Brad01Layer = cc.Layer.extend({
                             layer.inputString =
                                 layer.inputString.substr(0, layer.inputString.length-1);
                             layer.input.setString(layer.inputString);
+                            layer.input.setColor(cc.color(255,255,255));
                             return;
                         }
                     }
@@ -69,7 +86,7 @@ var Brad01Layer = cc.Layer.extend({
                             }
 
                             layer.inputString = '';
-
+                            layer.input.setColor(cc.color(255,255,255));
 
                             return;
                         }
@@ -83,8 +100,12 @@ var Brad01Layer = cc.Layer.extend({
                                 layer.input.setString(layer.inputString);
                                 break;
                             }
-
                         }
+
+                        if (layer.inputString.length == 3){
+                            layer.input.setColor(cc.color(255,255,0));
+                        }
+
                     }
 
 
